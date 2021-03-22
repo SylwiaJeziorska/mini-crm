@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CompaniesStoreRequest;
 use App\Models\Companies;
 use Illuminate\Http\Request;
 
@@ -34,21 +35,13 @@ class CompaniesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CompaniesStoreRequest $request)
     {
-        $request->validate([
-            'name'    =>  ['required'],
-            'email'    =>  ['nullable', 'email'],
-            'website'  =>  ['nullable'],
-            'logo'    =>  ['nullable', 'file', 'dimensions:min_width=100,min_height=100']
-        ]);
-
         $form_data = array(
             'name'       =>   $request->name,
             'email'      =>   $request->email,
             'website'    =>   $request->website,
         );
-
         if($request->file('logo')){
             $image = $request->file('logo');
             $new_name = rand() . '.' . $image->getClientOriginalExtension();
@@ -90,14 +83,9 @@ class CompaniesController extends Controller
      * @param  \App\Models\Companies  $companies
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CompaniesStoreRequest $request, $id)
     {
-        $request->validate([
-            'name'    =>  ['required'],
-            'email'    =>  ['nullable', 'email'],
-            'website'  =>  ['nullable'],
-            'logo'    =>  ['nullable', 'file', 'dimensions:min_width=100,min_height=100']
-        ]);
+
 
         $form_data = array(
             'name'       =>   $request->name,
@@ -124,7 +112,7 @@ class CompaniesController extends Controller
      */
     public function destroy( $id)
     {
-        
+
         $company = Companies::findOrFail($id);
         $company->delete();
         return redirect('companies')->with('success', 'Data is successfully deleted');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EmployeesStoreRequest;
 use App\Models\Employees;
 use App\Models\Companies;
 use Illuminate\Http\Request;
@@ -27,7 +28,6 @@ class EmployeesController extends Controller
     public function create()
     {
         $companies = Companies::all();
-        // dd($companies);
         return view('employees.create',compact('companies'));
     }
 
@@ -37,15 +37,8 @@ class EmployeesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(EmployeesStoreRequest $request)
     {
-        $request->validate([
-            'first_name'    =>  'required',
-            'last_name'     =>  'required',
-            'company_id'	=>	'required',
-            'email'         =>  ['nullable', 'email'],
-            
-        ]);
 
         $form_data = array(
             'first_name'     =>   $request->first_name,
@@ -81,7 +74,7 @@ class EmployeesController extends Controller
      */
     public function edit($id)
     {
-        
+
         $employee = Employees::findOrFail($id);
         $companies = Companies::all();;
         return view('employees.edit', compact('employee','companies'));
@@ -94,17 +87,8 @@ class EmployeesController extends Controller
      * @param  \App\Models\Employees  $employees
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EmployeesStoreRequest $request, $id)
     {
-        $request->validate([
-            'first_name'    =>  'required',
-            'last_name'     =>  'required',
-            'email'     =>  'required',
-            'phone'     =>  'required',
-            'company_id'     =>  'required',
-
-            
-        ]);
 
   $form_data = array(
         'first_name'    =>  $request->first_name,
@@ -113,8 +97,6 @@ class EmployeesController extends Controller
         'phone'         =>  $request->phone,
         'company_id'    =>  $request->company_id,
     );
-
- 
 
    Employees::whereId($id)->update($form_data);
     return redirect('employees')->with('success', 'Data is successfully updated');
