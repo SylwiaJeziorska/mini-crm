@@ -5,6 +5,7 @@
 - Npm install
 - php artisan migrate
 - php artisan db:seed --class=UserSeeder
+- php artisan key:generate
 
 ## About Laravel
 
