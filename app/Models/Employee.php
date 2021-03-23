@@ -34,7 +34,7 @@ class Employee extends Model
      * Create a new employee.
      * @param $request object
      */
-    public function creatEmployee($request){
+    public function createEmployee($request){
 
        $form_data = $this->createEmployeeArray($request);
        Employee::create($form_data);

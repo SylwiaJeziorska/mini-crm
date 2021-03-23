@@ -36,7 +36,7 @@ class EmployeesController extends Controller
      */
     public function store(EmployeesStoreRequest $request)
     {
-        (new Employee)->creatEmployee($request);
+        (new Employee)->createEmployee($request);
         return redirect('employees')->with('success', 'Data Added successfully.');
     }
 

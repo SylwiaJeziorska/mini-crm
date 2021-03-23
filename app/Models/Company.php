@@ -31,7 +31,7 @@ class Company extends Model
      */
     public function store($request){
 
-        $form_data = $this->creatCompanyArray($request);
+        $form_data = $this->createCompanyArray($request);
 
         if($request->file('logo')){
            $form_data['logo'] =  $this->companyImg($request->file('logo'));
@@ -45,7 +45,7 @@ class Company extends Model
      */
     public function updateCompany($request, $id){
 
-       $form_data = $this->creatCompanyArray($request);
+       $form_data = $this->createCompanyArray($request);
 
        if($request->file('logo')){
            $form_data['logo'] =  $this->companyImg($request->file('logo'));
@@ -58,7 +58,7 @@ class Company extends Model
      * @param $request
      * @return array
      */
-    public function creatCompanyArray($request){
+    public function createCompanyArray($request){
 
        return array(
            'name'       =>   $request->name,
