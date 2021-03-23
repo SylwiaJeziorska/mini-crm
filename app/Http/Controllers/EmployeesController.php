@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EmployeesStoreRequest;
-use App\Models\Employees;
-use App\Models\Companies;
-use Illuminate\Http\Request;
+use App\Models\Employee;
+use App\Models\Company;
 
 class EmployeesController extends Controller
 {
@@ -16,8 +15,7 @@ class EmployeesController extends Controller
      */
     public function index()
     {
-        $employees = Employees::latest()->paginate(10);
-        return view('employees.index', compact('employees'));
+        return response()->view('employees.index', ['employees' => (new Employee)->index()]);
     }
 
     /**
@@ -27,8 +25,7 @@ class EmployeesController extends Controller
      */
     public function create()
     {
-        $companies = Companies::all();
-        return view('employees.create',compact('companies'));
+        return response()->view('employees.create',["companies"=>(new Company)->index()]);
     }
 
     /**
@@ -39,79 +36,58 @@ class EmployeesController extends Controller
      */
     public function store(EmployeesStoreRequest $request)
     {
-
-        $form_data = array(
-            'first_name'     =>   $request->first_name,
-            'last_name'      =>   $request->last_name,
-            'email'			 =>   $request->email,
-            'phone'			 =>   $request->phone,
-            'company_id'     => $request->company_id
-        );
-
-       Employees::create($form_data);
-
-
+        (new Employee)->creatEmployee($request);
         return redirect('employees')->with('success', 'Data Added successfully.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Employees  $employees
+     * @param  \App\Models\Employee  $employees
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $employee = Employees::findOrFail($id);
-        return view('employees.show', compact('employee'));
+        return response()->view('employees.show', ['employee'=> (new Employee)->getEmployeeById($id)]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Employees  $employees
+     * @param  \App\Models\Employee  $employees
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-
-        $employee = Employees::findOrFail($id);
-        $companies = Companies::all();;
-        return view('employees.edit', compact('employee','companies'));
+        $employee = (new Employee)->getEmployeeById($id);
+        $companies = (new Company)->index();
+        return response()->view('employees.edit', compact('employee','companies'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Employees  $employees
+     * @param  \App\Models\Employee  $employees
      * @return \Illuminate\Http\Response
      */
     public function update(EmployeesStoreRequest $request, $id)
     {
 
-  $form_data = array(
-        'first_name'    =>  $request->first_name,
-        'last_name'     =>  $request->last_name,
-        'email'         =>  $request->email,
-        'phone'         =>  $request->phone,
-        'company_id'    =>  $request->company_id,
-    );
-
-   Employees::whereId($id)->update($form_data);
-    return redirect('employees')->with('success', 'Data is successfully updated');
+        (new Employee)->updateEmployee($request, $id);
+        return redirect('employees')->with('success', 'Data is successfully updated');
 
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Employees  $employees
+     * @param  \App\Models\Employee  $employees
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $data = Employees::findOrFail($id);
+        $data = Employee::findOrFail($id);
         $data->delete();
         return redirect('companies')->with('success', 'Data is successfully deleted');
     }

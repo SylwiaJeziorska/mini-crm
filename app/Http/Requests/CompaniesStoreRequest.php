@@ -24,10 +24,10 @@ class CompaniesStoreRequest extends FormRequest
     public function rules()
     {
         return [
-                'name'    =>  ['required'],
+                'name'     =>  ['required'],
                 'email'    =>  ['required','email'],
-                'website'  =>  ['nullable'],
-                'logo'    =>  ['nullable', 'file', 'dimensions:min_width=100,min_height=100']
+                'website'  =>  ['required', 'nullable'],
+                'logo'     =>  [ 'nullable', 'mimes:png,jpeg, jpg,gif,svg']
         ];
     }
 }

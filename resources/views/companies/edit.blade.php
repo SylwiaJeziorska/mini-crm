@@ -22,9 +22,7 @@
 
                             <div class="text-center mb-4">
                                 @if($company->logo)
-                                    <img width="100" height="100" src="{{ asset('images/'. $company->logo) }}">
-                                @else
-                                    <img width="100" height="100" src="{{ asset('images/no-image-available.png') }}">
+                                    <img height="100" src="{{ asset('images/'. $company->logo) }}">
                                 @endif
                             </div>
 
@@ -57,5 +55,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> 
 @endsection

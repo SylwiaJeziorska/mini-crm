@@ -5,7 +5,13 @@
 - Npm install
 - php artisan migrate
 - php artisan db:seed --class=UserSeeder
+- php artisan db:seed --class=CompanySeeder
 - php artisan key:generate
+
+#### Login as
+
+username: admin@admin.com
+password : password
 
 ## About Laravel
 

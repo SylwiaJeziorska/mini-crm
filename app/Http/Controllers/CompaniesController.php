@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CompaniesStoreRequest;
-use App\Models\Companies;
+use App\Models\Company;
 use Illuminate\Http\Request;
 
 class CompaniesController extends Controller
@@ -15,8 +15,7 @@ class CompaniesController extends Controller
      */
     public function index()
     {
-        $companies = Companies::all();
-        return view('companies.index', ["companies"=>$companies]);
+        return response()->view('companies.index', ["companies"=>(new Company)->index()]);
     }
 
     /**
@@ -26,7 +25,7 @@ class CompaniesController extends Controller
      */
     public function create()
     {
-        return view('companies.create');
+        return response()->view('companies.create');
     }
 
     /**
@@ -37,18 +36,8 @@ class CompaniesController extends Controller
      */
     public function store(CompaniesStoreRequest $request)
     {
-        $form_data = array(
-            'name'       =>   $request->name,
-            'email'      =>   $request->email,
-            'website'    =>   $request->website,
-        );
-        if($request->file('logo')){
-            $image = $request->file('logo');
-            $new_name = rand() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images'), $new_name);
-            $form_data['logo'] = $new_name;
-        }
-        Companies::create($form_data);
+        (new Company)->store($request);
+
         return redirect('companies')->with('success', 'Data Added successfully.');
     }
 
@@ -60,8 +49,8 @@ class CompaniesController extends Controller
      */
     public function show($id)
     {
-        $company = Companies::findOrFail($id);
-        return view('companies.show', compact('company'));
+        $company = (new Company)->getCompany($id);
+        return response()->view('companies.show', compact('company'));
     }
 
     /**
@@ -72,48 +61,34 @@ class CompaniesController extends Controller
      */
     public function edit($id)
     {
-        $company = Companies::findOrFail($id);
-        return view('companies.edit', compact('company'));
+        $company = (new Company)->getCompany($id);
+        return response()->view('companies.edit', compact('company'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Companies  $companies
+     * @param  \App\Models\Company  $companies
      * @return \Illuminate\Http\Response
      */
     public function update(CompaniesStoreRequest $request, $id)
     {
+        (new Company)->updateCompany($request, $id);
 
-
-        $form_data = array(
-            'name'       =>   $request->name,
-            'email'      =>   $request->email,
-            'website'    =>   $request->website,
-        );
-
-        if($request->file('logo')){
-            $image = $request->file('logo');
-            $new_name = rand() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images'), $new_name);
-            $form_data['logo'] = $new_name;
-        }
-
-        Companies::whereId($id)->update($form_data);
         return redirect('companies')->with('success', 'Data is successfully updated');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Companies  $companies
+     * @param  \App\Models\Company  $companies
      * @return \Illuminate\Http\Response
      */
     public function destroy( $id)
     {
 
-        $company = Companies::findOrFail($id);
+        $company = Company::findOrFail($id);
         $company->delete();
         return redirect('companies')->with('success', 'Data is successfully deleted');
     }
